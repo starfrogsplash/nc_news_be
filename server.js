@@ -1,5 +1,7 @@
 if (!process.env.NODE_ENV) process.env.NODE_ENV = 'dev';
 
+const apiRouter = require('./routers/api')
+
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
@@ -13,5 +15,6 @@ mongoose.connect(db, {useMongoClient: true})
   .catch(err => console.log('connection failed', err));
 
 app.use(bodyParser.json());
+app.use('/api', apiRouter)
 
 module.exports = app;
