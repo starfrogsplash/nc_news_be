@@ -14,4 +14,25 @@ const postComment = (req, res) => {
     .catch(error => console.log(error))
 }
 
-module.exports = { postComment }
+    const putVoteComment = (req, res) => {
+        console.log (req.params)
+        console.log (req.params.comment_id)
+        console.log (req.query)
+    
+        let count = 0;
+        if(req.query.vote === 'up') count++
+        if(req.query.vote === 'down') count--
+    
+       return Comments.update ({ _id: req.params.comment_id}, {$inc: {"votes": count}} )  
+        .then(results => res.send(results))
+        .catch(err => {
+            console.log(err)
+            res.status(500).send('Something broke!')
+        })
+
+    }
+    
+
+
+
+module.exports = { postComment, putVoteComment }

@@ -15,4 +15,28 @@ const getAllComments = (req, res) => {
     .catch(error => console.log(error))
 }
 
-module.exports = {getAllArticles, getAllComments}
+const putVoteArticles = (req, res) => {
+// check does req.query.vote exist?
+ // vote up or down?
+ if (req.query.vote === 'up'){
+     Articles.update({$inc: {votes:1}}, function(error, data){
+        if (error) {
+            res.status(500).send('Something broke!')
+        }
+         res.send(data)
+     })
+ } else if (req.query.vote === 'down'){
+    Articles.update({$inc: {votes:-1}}, function(error, data){
+       if (error) {
+           res.status(500).send('Something broke!')
+       }
+        res.send(data)
+    })
+}
+//update the database +/- votecount
+//res with the article
+
+}
+
+
+module.exports = {getAllArticles, getAllComments, putVoteArticles}
