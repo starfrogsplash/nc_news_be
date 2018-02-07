@@ -8,6 +8,14 @@ const getAllArticles = (req, res) => {
         .catch(error => console.log(error))
 }
 
+const getSingleComment = (req, res) => {
+    return Comments.findOne({_id: req.params.comment_id}).lean()
+        .then(result => res.send(result))
+        .catch(error => console.log(error))
+}
+
+
+
 const getAllComments = (req, res) => {
     return Comments.find().lean()
         .then(comments => res.send(comments))
@@ -34,9 +42,6 @@ const postComment = (req, res) => {
 }
 
 const putVoteComment = (req, res) => {
-    console.log(req.params)
-    console.log(req.params.comment_id)
-    console.log(req.query)
 
     let count = 0;
     if (req.query.vote === 'up') count++
@@ -54,4 +59,4 @@ const putVoteComment = (req, res) => {
 
 
 
-module.exports = { postComment, putVoteComment, getAllComments, deleteComment }
+module.exports = { postComment, putVoteComment, getAllComments, deleteComment, getSingleComment }
