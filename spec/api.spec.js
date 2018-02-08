@@ -13,7 +13,7 @@ describe('articles', () => {
             .then(saveTestData)
             .then(savedData => {
                 data = savedData
-                //console.log(data)
+                console.log(data)
             })
     })
     after(function (done) {
@@ -27,9 +27,9 @@ describe('articles', () => {
             .get('/api/topics')
             .expect(200)
             .then(res => {
-                expect(res.body).to.be.an('array')
-                expect(res.body[0]).to.be.an('object')
-                expect(res.body[0].title).to.equal('Football')
+                expect(res.body.topics).to.be.an('array')
+                expect(res.body.topics.length).to.equal(3)
+                expect(res.body.topics[0].title).to.equal('Football')
             })
     })
 
@@ -40,9 +40,9 @@ describe('articles', () => {
             .get(`/api/topics/${data.topics[0].slug}/articles`)
             .expect(200)
             .then(res => {
-                console.log(res.body)
-                expect(res.body).to.be.an('array')
-                expect(res.body.length).to.equal(1)
+                expect(res.body).to.be.an('object')
+                expect(res.body.result[0]).to.be.an('object')
+                expect(res.body.result.length).to.equal(1)
             })
     })
 
@@ -53,14 +53,16 @@ describe('articles', () => {
             .expect('Content-Type', /json/)
             .expect(200)
             .then(res => {
-                expect(res.body).to.be.an('array')
-                expect(res.body[0]).to.be.an('object')
-                expect(res.body[0].belongs_to).to.equal('cats')
-                expect(res.body.length).to.equal(2);
+                console.log(res.body.articles)
+                console.log(res.body.articles[1])
+                expect(res.body.articles).to.be.an('array')
+                expect(res.body.articles[1]).to.be.an('object')
+                expect(res.body.articles[0].belongs_to).to.equal('cats')
+                expect(res.body.articles.length).to.equal(2);
             })
     });
 
-    it('returns all comments for 1 article', () => {
+    xit('returns all comments for 1 article', () => {
         return request(app)
             .get(`/api/articles/${data.articles[0]._id}/comments`)
             .expect(200)
@@ -70,7 +72,7 @@ describe('articles', () => {
             })
     })
 
-    it('Add a new comment to an article', () => {
+    xit('Add a new comment to an article', () => {
         return request(app)
             .post(`/api/articles/${data.articles[0]._id}/comments`)
             .send({ "comment": "This is my new comment" })
@@ -84,7 +86,7 @@ describe('articles', () => {
             })
     })
 
-    it('increases vote count in comment', () => {
+    xit('increases vote count in comment', () => {
         return request(app)
             .get(`/api/comments/${data.comments[0]._id}`)
             .then(res => {
@@ -104,7 +106,7 @@ describe('articles', () => {
             })
     })
 
-    it('decreases the vote count in comment', () => {
+    xit('decreases the vote count in comment', () => {
         return request(app)
             .get(`/api/comments/${data.comments[0]._id}`)
             .then(res => {
@@ -125,7 +127,7 @@ describe('articles', () => {
             })
     })
 
-    it ('Delete a comment to an article, returns an object', () => {
+    xit ('Delete a comment to an article, returns an object', () => {
         return request (app)
         .get ('/api/comments')
         .then ( res => {

@@ -4,13 +4,13 @@ const Articles = require('../models/articles')
 
 const getAllArticles = (req, res) => {
     return Articles.find().lean()
-        .then(topics => res.send(topics))
+        .then(topics => res.send({topics}))
         .catch(error => console.log(error))
 }
 
 const getSingleComment = (req, res) => {
     return Comments.findOne({_id: req.params.comment_id}).lean()
-        .then(result => res.send(result))
+        .then(result => res.send({result}))
         .catch(error => console.log(error))
 }
 

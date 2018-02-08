@@ -5,13 +5,13 @@ const Comments = require('../models/comments')
 
 const getAllArticles = (req, res) => {
     return Articles.find().lean()
-    .then(topics => res.send(topics))
+    .then(articles => res.send({articles}))
     .catch(error => console.log(error))
 }
 
 const getAllComments = (req, res) => {
     return Comments.find({'belongs_to': req.params.article_id}).lean()
-    .then(result => res.send(result))
+    .then(result => res.send({result}))
     .catch(error => console.log(error))
 }
 
