@@ -21,6 +21,19 @@ describe('articles', () => {
         done()
     })
 
+
+    it('get request to fetch all topics', () => {
+        return request(app)
+            .get('/api/topics')
+            .expect(200)
+            .then(res => {
+                expect(res.body).to.be.an('array')
+                expect(res.body[0]).to.be.an('object')
+                expect(res.body[0].title).to.equal('Football')
+            })
+    })
+
+
     it('returns all articles', () => {
         return request(app)
             .get('/api/articles')
@@ -28,6 +41,8 @@ describe('articles', () => {
             .expect(200)
             .then(res => {
                 expect(res.body).to.be.an('array')
+                expect(res.body[0]).to.be.an('object')
+                expect(res.body[0].belongs_to).to.equal('cats')
                 expect(res.body.length).to.equal(2);
             })
     });
