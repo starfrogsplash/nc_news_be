@@ -10,7 +10,7 @@ const getAllArticles = (req, res) => {
 
 const getSingleComment = (req, res) => {
     return Comments.findOne({_id: req.params.comment_id}).lean()
-        .then(result => res.send({result}))
+        .then(comment => res.send({comment}))
         .catch(error => console.log(error))
 }
 

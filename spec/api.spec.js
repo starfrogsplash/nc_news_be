@@ -13,7 +13,7 @@ describe('articles', () => {
             .then(saveTestData)
             .then(savedData => {
                 data = savedData
-                console.log(data)
+               // console.log(data)
             })
     })
     after(function (done) {
@@ -41,8 +41,8 @@ describe('articles', () => {
             .expect(200)
             .then(res => {
                 expect(res.body).to.be.an('object')
-                expect(res.body.result[0]).to.be.an('object')
-                expect(res.body.result.length).to.equal(1)
+                expect(res.body.articles[0]).to.be.an('object')
+                expect(res.body.articles.length).to.equal(1)
             })
     })
 
@@ -53,8 +53,8 @@ describe('articles', () => {
             .expect('Content-Type', /json/)
             .expect(200)
             .then(res => {
-                console.log(res.body.articles)
-                console.log(res.body.articles[1])
+                // console.log(res.body.articles)
+                // console.log(res.body.articles[1])
                 expect(res.body.articles).to.be.an('array')
                 expect(res.body.articles[1]).to.be.an('object')
                 expect(res.body.articles[0].belongs_to).to.equal('cats')
@@ -62,13 +62,17 @@ describe('articles', () => {
             })
     });
 
-    xit('returns all comments for 1 article', () => {
+    it('returns all comments for 1 article', () => {
         return request(app)
             .get(`/api/articles/${data.articles[0]._id}/comments`)
             .expect(200)
             .then(res => {
-                expect(res.body).to.be.an('array')
-                expect(res.body.length).to.equal(2);
+                //console.log(res.body)
+                //console.log(res.body.comments[0].votes)
+                expect(res.body).to.be.an('object')
+                expect(res.body.comments[0].created_by).to.be.an('string')
+                expect(res.body.comments[0].votes).to.be.an('number')
+                expect(res.body.comments.length).to.equal(2);
             })
     })
 

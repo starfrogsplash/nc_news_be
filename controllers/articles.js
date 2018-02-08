@@ -11,7 +11,7 @@ const getAllArticles = (req, res) => {
 
 const getAllComments = (req, res) => {
     return Comments.find({'belongs_to': req.params.article_id}).lean()
-    .then(result => res.send({result}))
+    .then(comments => res.send({comments}))
     .catch(error => console.log(error))
 }
 

@@ -6,7 +6,7 @@ const mongoose = require('../lib/mongoose');
 
 const getUser = (req, res) => {
     return Username.findOne({username: req.params.username}).lean()
-        .then(result => res.send({result}))
+        .then(users => res.send({users}))
         .catch(error => console.log(error))
 }
 

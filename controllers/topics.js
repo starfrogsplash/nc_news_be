@@ -13,7 +13,7 @@ const getAllTopics = (req, res) => {
 
 const getAllArticles = (req, res) => {
     return Articles.find({"belongs_to": req.params.topic_id}).lean()
-    .then(result => res.send({result}))
+    .then(articles => res.send({articles}))
     .catch(error => console.log(error))
 }
 
