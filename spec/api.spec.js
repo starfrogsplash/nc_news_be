@@ -95,10 +95,6 @@ describe('articles', () => {
         return request(app)
             .get(`/api/comments/${data.comments[0]._id}`)
             .then(res => {
-                // console.log('WHABWBUASNDKNA KS DUAND AS')
-                // console.log(res.body)
-                // console.log('=============================')
-                // console.log(res.body.comment)
                 let voteScore = res.body.comment.votes
                 return request(app)
                     .put(`/api/comments/${data.comments[0]._id}?vote=up`) // put request
@@ -109,6 +105,8 @@ describe('articles', () => {
                             .then(res => {
                                 //console.log (res)
                                 expect(res.body).to.an('object')
+                                expect(res.body.comment).to.be.an('object')
+                                expect(res.body.comment.body).to.be.an('string')
                                 expect(voteScore + 1).to.equal(res.body.comment.votes)
                             })
                     })
@@ -120,7 +118,6 @@ describe('articles', () => {
             .get(`/api/comments/${data.comments[0]._id}`)
             .then(res => {
                 let voteScore = res.body.comment.votes
-                //console.log(voteScore)
                 return request(app)
                     .put(`/api/comments/${data.comments[0]._id}?vote=down`)
                     .expect(200)
@@ -128,13 +125,56 @@ describe('articles', () => {
                         return request(app)
                             .get(`/api/comments/${data.comments[0]._id}`)
                             .then(res => {
-                                console.log(res.body)
-                                expect(res.body).to.be.an('object')
+                                expect(res.body.comment).to.be.an('object')
+                                expect(res.body.comment.body).to.be.an('string')
                                 expect(voteScore - 1).to.equal(res.body.comment.votes)
                             })
                     })
             })
     })
+
+    it('tests to see if put request increases the voteCount in chosen Article', () => {
+        return request(app)
+            .get(`/api/articles/${data.articles[0]._id}`)
+            .then(res => {
+                let voteScore = res.body.article.votes
+                return request(app)
+                    .put(`/api/articles/${data.articles[0]._id}?vote=up`) // put request
+                    .expect(200)
+                    .then(res => {
+                        return request(app)
+                            .get(`/api/articles/${data.articles[0]._id}`)
+                            .then(res => {
+                                expect(res.body.article).to.be.an('object')
+                                expect(res.body.article.body).to.be.an('string')
+                                expect(voteScore + 1).to.equal(res.body.article.votes)
+                            })
+                    })
+            })
+    })
+
+
+    it('tests to see if put request decreases the voteCount in chosen Article', () => {
+        return request(app)
+            .get(`/api/articles/${data.articles[0]._id}`)
+            .then(res => {
+                let voteScore = res.body.article.votes
+                return request(app)
+                    .put(`/api/articles/${data.articles[0]._id}?vote=down`) // put request
+                    .expect(200)
+                    .then(res => {
+                        return request(app)
+                            .get(`/api/articles/${data.articles[0]._id}`)
+                            .then(res => {
+                                //console.log (res)
+                                expect(res.body.article).to.be.an('object')
+                                expect(res.body.article.body).to.be.an('string')
+                                expect(voteScore - 1).to.equal(res.body.article.votes)
+                            })
+                    })
+            })
+    })
+
 
     xit ('Delete a comment to an article, returns an object', () => {
         return request (app)

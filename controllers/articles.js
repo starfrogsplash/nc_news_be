@@ -9,6 +9,15 @@ const getAllArticles = (req, res) => {
     .catch(error => console.log(error))
 }
 
+
+const getSingleArticle = (req, res) => {
+    return Articles.findOne({_id: req.params.article_id}).lean()
+        .then(article => res.send({article}))
+        .catch(error => console.log(error))
+}
+
+
+
 const getAllComments = (req, res) => {
     return Comments.find({'belongs_to': req.params.article_id}).lean()
     .then(comments => res.send({comments}))
@@ -18,25 +27,21 @@ const getAllComments = (req, res) => {
 const putVoteArticles = (req, res) => {
 // check does req.query.vote exist?
  // vote up or down?
- if (req.query.vote === 'up'){
-     Articles.update({$inc: {votes:1}}, function(error, data){
-        if (error) {
-            res.status(500).send('Something broke!')
-        }
-         res.send(data)
+ let count = 0;
+ if (req.query.vote === 'up') count++
+ if (req.query.vote === 'down') count--
+
+ return Articles.update({ _id: req.params.article_id }, { $inc: { "votes": count } })
+     .then(results => res.send(results))
+     .catch(err => {
+         console.log(err)
+         res.status(500).send('Something broke!')
      })
- } else if (req.query.vote === 'down'){
-    Articles.update({$inc: {votes:-1}}, function(error, data){
-       if (error) {
-           res.status(500).send('Something broke!')
-       }
-        res.send(data)
-    })
 }
 //update the database +/- votecount
 //res with the article
 
-}
 
 
-module.exports = {getAllArticles, getAllComments, putVoteArticles}
+
+module.exports = {getAllArticles, getSingleArticle, getAllComments, putVoteArticles}
