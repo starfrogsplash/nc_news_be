@@ -6,7 +6,7 @@ const saveTestData = require('../seed/test.seed.js')
 const app = require('../server');
 
 
-describe('articles', () => {
+describe('tests for restful api', () => {
     let data;
     before(function () {
         return mongoose.connection.dropDatabase()
@@ -39,7 +39,6 @@ describe('articles', () => {
                 expect(res.body.users).to.be.an('object')
                 expect(res.body.users.name).to.be.an('string')
                 expect(res.body.users.avatar_url).to.be.an('string')
-
             })
     })
 
