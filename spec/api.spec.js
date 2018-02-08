@@ -34,6 +34,19 @@ describe('articles', () => {
     })
 
 
+    it('get request to grab all articles for a topic', () => {
+        return request(app)
+            // api/topics/:topic/articles
+            .get(`/api/topics/${data.topics[0].slug}/articles`)
+            .expect(200)
+            .then(res => {
+                console.log(res.body)
+                expect(res.body).to.be.an('array')
+                expect(res.body.length).to.equal(1)
+            })
+    })
+
+
     it('returns all articles', () => {
         return request(app)
             .get('/api/articles')
