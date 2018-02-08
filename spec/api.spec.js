@@ -13,9 +13,9 @@ describe('articles', () => {
             .then(saveTestData)
             .then(savedData => {
                 data = savedData
-               console.log(data)
-               console.log('===============')
-               console.log(data.user.username)
+                console.log(data)
+                console.log('===============')
+                console.log(data.user.username)
             })
     })
     after(function (done) {
@@ -47,7 +47,7 @@ describe('articles', () => {
                 expect(res.body.users).to.be.an('object')
                 expect(res.body.users.name).to.be.an('string')
                 expect(res.body.users.avatar_url).to.be.an('string')
-     
+
             })
     })
 
@@ -103,11 +103,11 @@ describe('articles', () => {
             .set('Accept', 'application/json')
             .expect(200)
             .then(res => {
-               // console.log(res.body)
+                // console.log(res.body)
                 expect(res.body.body).to.equal("This is my new comment")
-                 expect(res.body.belongs_to).to.equal(`${data.articles[0]._id}`)
-                 expect(res.body.created_at).to.an('number')
-                 expect(res.body).to.be.an('object')
+                expect(res.body.belongs_to).to.equal(`${data.articles[0]._id}`)
+                expect(res.body.created_at).to.an('number')
+                expect(res.body).to.be.an('object')
             })
     })
 
@@ -196,29 +196,31 @@ describe('articles', () => {
     })
 
 
-    it ('Deletes a comment to an article, returns an object', () => {
-        return request (app)
-        .get ('/api/comments')
-        .then ( res => {
-            let originalComments = res.body.length
-            console.log (res.body.length)
-            console.log('==================')
-            let Selectedcomment = res.body[0]._id
-            return request (app)
-             .delete ('/api/comments/'+Selectedcomment)   
-             .expect(200)
-             .then(res => {
-                 //console.log(res.body)
-                return request (app)
-                 .get('/api/comments')
-                    .then(res => {
-                        console.log(res.body.length)
-                        expect(res.body).to.be.an('array')
-                        expect(originalComments -1).to.equal(res.body.length)
-                       // process.exit()
-                    })
-             })
+    it('Deletes a comment to an article, returns an object', () => {
+        let originalComments
+        let Selectedcomment
+        return request(app)
+            .get('/api/comments')
+            .then(res => {
+                console.log(res.body.length)
+                console.log('==================')
+                originalComments = res.body.length
+                Selectedcomment = res.body[0]._id
+                return request(app)
+                    .delete('/api/comments/' + Selectedcomment)
+                    .expect(200)
             })
-        })
+            .then(res => {
+                return request(app)
+                    .get('/api/comments')
+            })
+            .then(res => {
+                console.log(res.body.length)
+                expect(res.body).to.be.an('array')
+                expect(originalComments - 1).to.equal(res.body.length)
+                // process.exit()
+            })
+
+    })
 });
 
