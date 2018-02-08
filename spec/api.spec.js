@@ -13,7 +13,9 @@ describe('articles', () => {
             .then(saveTestData)
             .then(savedData => {
                 data = savedData
-               // console.log(data)
+               console.log(data)
+               console.log('===============')
+               console.log(data.user.username)
             })
     })
     after(function (done) {
@@ -32,6 +34,24 @@ describe('articles', () => {
                 expect(res.body.topics[0].title).to.equal('Football')
             })
     })
+
+    it('tests get request to grab userprofile data when searching by username', () => {
+        return request(app)
+            // api/users/:username
+            .get(`/api/users/${data.user.username}`)
+            .expect(200)
+            .then(res => {
+                console.log('successss********')
+                console.log(res.body)
+                console.log(res.body.users)
+                expect(res.body.users).to.be.an('object')
+                expect(res.body.users.name).to.be.an('string')
+                expect(res.body.users.avatar_url).to.be.an('string')
+     
+            })
+    })
+
+
 
 
     it('get request to grab all articles for a topic', () => {
