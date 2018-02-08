@@ -176,11 +176,13 @@ describe('articles', () => {
     })
 
 
-    xit ('Delete a comment to an article, returns an object', () => {
+    it ('Deletes a comment to an article, returns an object', () => {
         return request (app)
         .get ('/api/comments')
         .then ( res => {
-            //console.log (res.body.length)
+            let originalComments = res.body.length
+            console.log (res.body.length)
+            console.log('==================')
             let Selectedcomment = res.body[0]._id
             return request (app)
              .delete ('/api/comments/'+Selectedcomment)   
@@ -190,12 +192,12 @@ describe('articles', () => {
                 return request (app)
                  .get('/api/comments')
                     .then(res => {
-                       // console.log(res.body)
+                        console.log(res.body.length)
                         expect(res.body).to.be.an('array')
+                        expect(originalComments -1).to.equal(res.body.length)
                        // process.exit()
                     })
              })
-            //     expect(res.body.length).to.equal(res.body.length -1)
             })
         })
 });
