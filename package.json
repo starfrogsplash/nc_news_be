@@ -4,9 +4,8 @@
   "description": "### Background",
   "main": "config.js",
   "scripts": {
-    "test": "mocha spec",
-    "start": "nodemon index.js",
-    "seed": "./seed/test.seed.js"
+    "test": "NODE_ENV=test mocha spec",
+    "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",

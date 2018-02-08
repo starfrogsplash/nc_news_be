@@ -27,8 +27,10 @@ const getAllComments = (req, res) => {
 
 const deleteComment = (req, res) => {
    return Comments.findOneAndRemove({_id: req.params.comment_id })
-        .then (res => console.log(res))
-}
+        .then (deletedComment => {
+            res.status (200).send(deletedComment)
+    })
+} 
 
 const postComment = (req, res) => {
     const comment = new Comments({
