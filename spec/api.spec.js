@@ -76,13 +76,14 @@ describe('articles', () => {
             })
     })
 
-    xit('Add a new comment to an article', () => {
+    it('posts a new comment to an article', () => {
         return request(app)
             .post(`/api/articles/${data.articles[0]._id}/comments`)
             .send({ "comment": "This is my new comment" })
             .set('Accept', 'application/json')
             .expect(200)
             .then(res => {
+               // console.log(res.body)
                 expect(res.body.body).to.equal("This is my new comment")
                  expect(res.body.belongs_to).to.equal(`${data.articles[0]._id}`)
                  expect(res.body.created_at).to.an('number')
@@ -90,11 +91,15 @@ describe('articles', () => {
             })
     })
 
-    xit('increases vote count in comment', () => {
+    it('increases vote count in comment', () => {
         return request(app)
             .get(`/api/comments/${data.comments[0]._id}`)
             .then(res => {
-                let voteScore = res.body.votes
+                // console.log('WHABWBUASNDKNA KS DUAND AS')
+                // console.log(res.body)
+                // console.log('=============================')
+                // console.log(res.body.comment)
+                let voteScore = res.body.comment.votes
                 return request(app)
                     .put(`/api/comments/${data.comments[0]._id}?vote=up`) // put request
                     .expect(200)
@@ -104,17 +109,17 @@ describe('articles', () => {
                             .then(res => {
                                 //console.log (res)
                                 expect(res.body).to.an('object')
-                                expect(voteScore + 1).to.equal(res.body.votes)
+                                expect(voteScore + 1).to.equal(res.body.comment.votes)
                             })
                     })
             })
     })
 
-    xit('decreases the vote count in comment', () => {
+    it('decreases the vote count in comment', () => {
         return request(app)
             .get(`/api/comments/${data.comments[0]._id}`)
             .then(res => {
-                let voteScore = res.body.votes
+                let voteScore = res.body.comment.votes
                 //console.log(voteScore)
                 return request(app)
                     .put(`/api/comments/${data.comments[0]._id}?vote=down`)
@@ -123,9 +128,9 @@ describe('articles', () => {
                         return request(app)
                             .get(`/api/comments/${data.comments[0]._id}`)
                             .then(res => {
-                                //console.log(res.body)
+                                console.log(res.body)
                                 expect(res.body).to.be.an('object')
-                                expect(voteScore - 1).to.equal(res.body.votes)
+                                expect(voteScore - 1).to.equal(res.body.comment.votes)
                             })
                     })
             })
