@@ -181,7 +181,7 @@ describe('tests for restful api', () => {
             })
     })
 
-    it('Deletes a comment to an article, returns an object', () => {
+    it('tests Delete request a comment to an article', () => {
         let originalComments
         let Selectedcomment
         return request(app)
