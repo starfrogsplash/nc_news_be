@@ -5,13 +5,19 @@ const Articles = require('../models/articles')
 const getAllArticles = (req, res) => {
     return Articles.find().lean()
         .then(topics => res.send({topics}))
-        .catch(error => console.log(error))
+        .catch(error => {
+            console.log(error)
+            res.status(404).send('Not Found!')
+        })
 }
 
 const getSingleComment = (req, res) => {
     return Comments.findOne({_id: req.params.comment_id}).lean()
         .then(comment => res.send({comment}))
-        .catch(error => console.log(error))
+        .catch(error => {
+            console.log(error)
+            res.status(404).send('Not Found!')
+        })
 }
 
 
@@ -40,7 +46,10 @@ const postComment = (req, res) => {
 
     return comment.save()
         .then(newComment => res.send(newComment))
-        .catch(error => console.log(error))
+        .catch(error => {
+            console.log(error)
+            res.status(404).send('Not Found!')
+        })
 }
 
 const putVoteComment = (req, res) => {
