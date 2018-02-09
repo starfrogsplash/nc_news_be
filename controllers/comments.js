@@ -21,7 +21,6 @@ const getSingleComment = (req, res) => {
 }
 
 
-
 const getAllComments = (req, res) => {
     return Comments.find().lean()
         .then(comments => res.send(comments))
