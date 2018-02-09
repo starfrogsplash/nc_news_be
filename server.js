@@ -1,4 +1,4 @@
-if (!process.env.NODE_ENV) process.env.NODE_ENV = 'dev';
+//if (!process.env.NODE_ENV) process.env.NODE_ENV = 'dev';
 
 const apiRouter = require('./routers/api')
 
@@ -7,7 +7,7 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var app = express();
 var config = require('./config');
-var db = config.DB[process.env.NODE_ENV] || process.env.DB;
+var db = config.DB_DEV ;
 mongoose.Promise = Promise;
 
 mongoose.connect(db, {useMongoClient: true})
