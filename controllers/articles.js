@@ -4,8 +4,22 @@ const Comments = require('../models/comments')
 
 
 const getAllArticles = (req, res) => {
+    let articles
     return Articles.find().lean()
-        .then(articles => res.send({ articles }))
+        .then(results => {
+            articles = results
+            const commentsPromises = results.map( article =>  {
+            return Comments.find({ 'belongs_to': article._id}).lean()
+            }) 
+        return Promise.all(commentsPromises)
+        })
+        .then (comments => {
+            articles = articles.map((article, index)=>{
+               article.comments = comments[index].length
+               return article
+                })
+            res.send ({articles})
+        })
         .catch(error => {
             console.log(error)
             res.status(404).send('Not Found!')
@@ -15,10 +29,17 @@ const getAllArticles = (req, res) => {
 
 const getSingleArticle = (req, res) => {
     return Articles.findOne({ _id: req.params.article_id }).lean()
-        .then(article => res.send({ article }))
+        .then(article => {
+            if (article === null) return res.status(404).send('Not Found!')
+            else res.send({article})
+        })
         .catch(error => {
             console.log(error)
-            res.status(404).send('Not Found!')
+            if (error.name === 'CastError') {
+                res.status(400).send('Invalid ID')
+            } else {
+                res.status(500).send('Something went wrong!')
+            }
         })
 }
 
