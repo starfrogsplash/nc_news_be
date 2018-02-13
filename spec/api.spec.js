@@ -1,4 +1,4 @@
-console.log(process.env.NODE_ENV)
+//console.log(process.env.NODE_ENV)
 const { expect } = require('chai');
 const mongoose = require('mongoose')
 const request = require('supertest');
@@ -67,6 +67,33 @@ describe('tests for restful api', () => {
             })
     });
 
+    it('recieve approproate error 404 for not finding an article ', () => {
+        return request(app)
+            .get('/api/articles/5a7d9ee50fc22c35059f3e91')
+            .expect(404)
+            .then(res => {
+                expect(res.text).to.equal('Not Found!')
+            })
+        });
+
+    it('returns error for invalid Article ID', () => {
+        return request(app)
+            .get('/api/articles/5a7d9ee50fc22c35059f3e9192829')
+            .expect(400)
+            .then(res => {
+                expect(res.text).to.equal('Invalid ID')
+            })
+        })
+
+    it('returns 404 error for comments if invalid ID is found', () => {
+        return request(app)
+            .get('/api/articles/5a7d9ee50fc22c35059f3e9192829')
+            .expect(400)
+            .then(res => {
+                expect(res.text).to.equal('Invalid ID')
+            })
+        })    
+
     it('returns all comments for 1 article', () => {
         return request(app)
             .get(`/api/articles/${data.articles[0]._id}/comments`)
@@ -77,7 +104,9 @@ describe('tests for restful api', () => {
                 expect(res.body.comments[0].votes).to.be.an('number')
                 expect(res.body.comments.length).to.equal(2);
             })
-    })
+        })
+
+
 
     it('posts a new comment to an article', () => {
         return request(app)
@@ -203,5 +232,9 @@ describe('tests for restful api', () => {
             })
 
     })
+
+
+
+
 });
 

@@ -34,7 +34,6 @@ const getSingleArticle = (req, res) => {
             else res.send({article})
         })
         .catch(error => {
-            console.log(error)
             if (error.name === 'CastError') {
                 res.status(400).send('Invalid ID')
             } else {
@@ -47,10 +46,12 @@ const getSingleArticle = (req, res) => {
 
 const getAllComments = (req, res) => {
     return Comments.find({ 'belongs_to': req.params.article_id }).lean()
-        .then(comments => res.send({ comments }))
+        .then(comments => {
+            res.send({ comments })
+        })
         .catch(error => {
             console.log(error)
-            res.status(404).send('Not Found!')
+            if (error.name === 'CastError') res.status(400).send('Invalid ID')
         })
 }
 
@@ -59,6 +60,8 @@ const putVoteArticles = (req, res) => {
     let count = 0;
     if (req.query.vote === 'up') count++
     if (req.query.vote === 'down') count--
+    if (!req.query.vote) res.status(400).send('Not a valid query!')
+    if (req.query.vote !== 'up' && req.query.vote !== 'down') res.status(404).send('blah blah clah')
 
     return Articles.findByIdAndUpdate({ _id: req.params.article_id }, { $inc: { "votes": count } }).lean()
         .then(results => {
@@ -70,10 +73,6 @@ const putVoteArticles = (req, res) => {
             res.status(500).send('Something broke!')
         })
 }
-//update the database +/- votecount
-//res with the article
-
-
 
 
 module.exports = { getAllArticles, getSingleArticle, getAllComments, putVoteArticles }
