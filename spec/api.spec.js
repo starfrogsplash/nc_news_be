@@ -27,7 +27,6 @@ describe('tests for restful api', () => {
             .then(res => {
                 expect(res.body.topics).to.be.an('array')
                 expect(res.body.topics.length).to.equal(3)
-                expect(res.body.topics[0].title).to.equal('Football')
             })
     })
 
@@ -122,93 +121,51 @@ describe('tests for restful api', () => {
             })
     })
 
-    it('increases vote count in comment', () => {
-        let voteScore
-        return request(app)
-            .get(`/api/comments/${data.comments[0]._id}`)
-            .then(res => {
-                voteScore = res.body.comment.votes
-                return request(app)
-                    .put(`/api/comments/${data.comments[0]._id}?vote=up`) // put request
-                    .expect(200)
+        it('Updates an comment vote count if query = up', () => {
+            return request(app)
+                .put(`/api/comments/${data.comments[0]._id}?vote=up`)
+                .then(res => {
+                    expect(res.body.votes).to.equal(1)
+                    expect(res.body).to.be.an('object')
+                })
             })
-            .then(res => {
-                return request(app)
-                    .get(`/api/comments/${data.comments[0]._id}`)
-            })
-            .then(res => {
-                expect(res.body).to.an('object')
-                expect(res.body.comment).to.be.an('object')
-                expect(res.body.comment.body).to.be.an('string')
-                expect(voteScore + 1).to.equal(res.body.comment.votes)
-            })
-    })
-
-    it('decreases the vote count in comment', () => {
-        let voteScore
-        return request(app)
-            .get(`/api/comments/${data.comments[0]._id}`)
-            .then(res => {
-                voteScore = res.body.comment.votes
+          
+            it('Updates the comment vote count if query = down', () => {
                 return request(app)
                     .put(`/api/comments/${data.comments[0]._id}?vote=down`)
-                    .expect(200)     
-            })
-            .then(res => {
-                return request(app)
-                    .get(`/api/comments/${data.comments[0]._id}`)    
-            })
-            .then(res => {
-                expect(res.body.comment).to.be.an('object')
-                expect(res.body.comment.body).to.be.an('string')
-                expect(voteScore - 1).to.equal(res.body.comment.votes)
-            })
-    })
-
-
-    it('tests to see if put request Increases the voteCount in chosen Article', () => {
-       let voteScore
+                    .then(res => {
+                        expect(res.body.votes).to.equal(0)
+                        expect(res.body).to.be.an('object')
+                    })
+                })    
+ 
+    it('Updates an articles vote counts if query = up', () => {
         return request(app)
-            .get(`/api/articles/${data.articles[0]._id}`)
+            .put(`/api/articles/${data.articles[0]._id}?vote=up`)
             .then(res => {
-                voteScore = res.body.article.votes
-                return request(app)
-                    .put(`/api/articles/${data.articles[0]._id}?vote=up`) // put request
-                    .expect(200)      
+                expect(res.body.votes).to.equal(1)
+                expect(res.body).to.be.an('object')
             })
-            .then(res => {
-                return request(app)
-                    .get(`/api/articles/${data.articles[0]._id}`)   
-            })
-            .then(res => {
-                expect(res.body.article).to.be.an('object')
-                expect(res.body.article.body).to.be.an('string')
-                expect(voteScore + 1).to.equal(res.body.article.votes)
+        })
+     
+        it('Updates an articles vote counts if query = down', () => {
+            return request(app)
+                .put(`/api/articles/${data.articles[0]._id}?vote=down`)
+                .then(res => {
+                    expect(res.body.votes).to.equal(0)
+                    expect(res.body).to.be.an('object')
+                })
             })
 
-    })    
-
-
-    it('tests to see if put request Decreases the voteCount in chosen Article', () => {
-        let voteScore
-        return request(app)
-            .get(`/api/articles/${data.articles[0]._id}`)
-            .then(res => {
-                voteScore = res.body.article.votes
+            it('tests Delete request a comment to an article', () => {
                 return request(app)
-                    .put(`/api/articles/${data.articles[0]._id}?vote=down`) // put request
-                    .expect(200)
-            })
-            .then(res => {
-                return request(app)
-                    .get(`/api/articles/${data.articles[0]._id}`)
-            })
-            .then(res => {
-                expect(res.body.article).to.be.an('object')
-                expect(res.body.article.body).to.be.an('string')
-                expect(voteScore - 1).to.equal(res.body.article.votes)
-            })
-    })
+                    .delete(`/api/articles/${data.comments[1]._id}`)
+                    .then(res => {
+                        console.log(res.body)
+                        expect(res.body).to.be.an('object')
+                    })
+                })    
+
 
     it('tests Delete request a comment to an article', () => {
         let originalComments
@@ -230,10 +187,7 @@ describe('tests for restful api', () => {
                 expect(res.body).to.be.an('array')
                 expect(originalComments - 1).to.equal(res.body.length)
             })
-
-    })
-
-
+        })
 
 
 });

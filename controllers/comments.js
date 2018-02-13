@@ -57,8 +57,11 @@ const putVoteComment = (req, res) => {
     if (req.query.vote === 'up') count++
     if (req.query.vote === 'down') count--
 
-    return Comments.update({ _id: req.params.comment_id }, { $inc: { "votes": count } })
-        .then(results => res.send(results))
+    return Comments.findByIdAndUpdate({ _id: req.params.comment_id }, { $inc: { "votes": count } }).lean()
+        .then(results => {
+            results.votes += count
+            res.send(results)
+        })
         .catch(err => {
             console.log(err)
             res.status(500).send('Something broke!')
