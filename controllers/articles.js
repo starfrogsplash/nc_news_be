@@ -21,8 +21,7 @@ const getAllArticles = (req, res) => {
             res.send ({articles})
         })
         .catch(error => {
-            console.log(error)
-            res.status(404).send('Not Found!')
+            res.status(500).send('Something went wrong!')
         })
 }
 
@@ -43,14 +42,12 @@ const getSingleArticle = (req, res) => {
 }
 
 
-
 const getAllComments = (req, res) => {
     return Comments.find({ 'belongs_to': req.params.article_id }).lean()
         .then(comments => {
             res.send({ comments })
         })
         .catch(error => {
-            console.log(error)
             if (error.name === 'CastError') res.status(400).send('Invalid ID')
         })
 }
@@ -60,8 +57,8 @@ const putVoteArticles = (req, res) => {
     let count = 0;
     if (req.query.vote === 'up') count++
     if (req.query.vote === 'down') count--
-    if (!req.query.vote) res.status(400).send('Not a valid query!')
-    if (req.query.vote !== 'up' && req.query.vote !== 'down') res.status(404).send('blah blah clah')
+    if (!req.query.vote) res.status(400).send({"message": "Please provide a query in the format vote=up or vote=down"})
+    if (req.query.vote !== 'up' && req.query.vote !== 'down') res.status(400).send({"message":'vote can only be up or down'})
 
     return Articles.findByIdAndUpdate({ _id: req.params.article_id }, { $inc: { "votes": count } }).lean()
         .then(results => {
@@ -69,7 +66,6 @@ const putVoteArticles = (req, res) => {
             res.send(results)
         })
         .catch(err => {
-            console.log(err)
             res.status(500).send('Something broke!')
         })
 }

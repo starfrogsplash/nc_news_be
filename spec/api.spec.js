@@ -30,7 +30,7 @@ describe('tests for restful api', () => {
             })
     })
 
-    it('tests get request to grab userprofile data when searching by username', () => {
+    it('tests get request to grab user profile data when searching by username', () => {
         return request(app)
             .get(`/api/users/${data.user.username}`)
             .expect(200)
@@ -40,6 +40,16 @@ describe('tests for restful api', () => {
                 expect(res.body.users.avatar_url).to.be.an('string')
             })
     })
+
+    it('returns 404 error is user doesnt exist', () => {
+        return request(app)
+            .get(`/api/users/bumblebee`)
+            .expect(404)
+            .then(res => {
+                expect(res.text).to.equal('Not Found!')
+            })
+    })
+
 
     it('get request to grab all articles for a topic', () => {
         return request(app)
@@ -61,7 +71,6 @@ describe('tests for restful api', () => {
             .then(res => {
                 expect(res.body.articles).to.be.an('array')
                 expect(res.body.articles[1]).to.be.an('object')
-                expect(res.body.articles[0].belongs_to).to.equal('cats')
                 expect(res.body.articles.length).to.equal(2);
             })
     });
@@ -73,25 +82,25 @@ describe('tests for restful api', () => {
             .then(res => {
                 expect(res.text).to.equal('Not Found!')
             })
-        });
+    });
 
-    it('returns error for invalid Article ID', () => {
+    it('returns 400 error for invalid Article ID', () => {
         return request(app)
             .get('/api/articles/5a7d9ee50fc22c35059f3e9192829')
             .expect(400)
             .then(res => {
                 expect(res.text).to.equal('Invalid ID')
             })
-        })
+    })
 
-    it('returns 404 error for comments if invalid ID is found', () => {
+    it('returns 400 error for comments belonging to an article if invalid ID is found', () => {
         return request(app)
-            .get('/api/articles/5a7d9ee50fc22c35059f3e9192829')
+            .get('/api/articles/5a7d9ee50fc22c35059f3e9192829/comments')
             .expect(400)
             .then(res => {
                 expect(res.text).to.equal('Invalid ID')
             })
-        })    
+    })
 
     it('returns all comments for 1 article', () => {
         return request(app)
@@ -103,8 +112,7 @@ describe('tests for restful api', () => {
                 expect(res.body.comments[0].votes).to.be.an('number')
                 expect(res.body.comments.length).to.equal(2);
             })
-        })
-
+    })
 
 
     it('posts a new comment to an article', () => {
@@ -121,24 +129,65 @@ describe('tests for restful api', () => {
             })
     })
 
-        it('Updates an comment vote count if query = up', () => {
-            return request(app)
-                .put(`/api/comments/${data.comments[0]._id}?vote=up`)
-                .then(res => {
-                    expect(res.body.votes).to.equal(1)
-                    expect(res.body).to.be.an('object')
-                })
+    it('return error 404 if comment doesnt exist', () => {
+        return request(app)
+            .get('/api/comments/5a7d9ee67fc22c35059f3eb8')
+            .expect(404)
+            .then(res => {
+                expect(res.text).to.equal('Not Found!')
             })
-          
-            it('Updates the comment vote count if query = down', () => {
-                return request(app)
-                    .put(`/api/comments/${data.comments[0]._id}?vote=down`)
-                    .then(res => {
-                        expect(res.body.votes).to.equal(0)
-                        expect(res.body).to.be.an('object')
-                    })
-                })    
- 
+    });
+
+    it('return error 400 if commentID is invalid', () => {
+        return request(app)
+            .get('/api/comments/5a7d9ee67fc22c35059f3eb89090')
+            .expect(400)
+            .then(res => {
+                expect(res.text).to.equal('Invalid ID')
+            })
+    });
+
+    it('Updates an comment vote count if query = up', () => {
+        return request(app)
+            .put(`/api/comments/${data.comments[0]._id}?vote=up`)
+            .then(res => {
+                expect(res.body.votes).to.equal(1)
+                expect(res.body).to.be.an('object')
+            })
+    })
+
+    it('Updates the comment vote count if query = down', () => {
+        return request(app)
+            .put(`/api/comments/${data.comments[0]._id}?vote=down`)
+            .then(res => {
+                expect(res.body.votes).to.equal(0)
+                expect(res.body).to.be.an('object')
+            })
+    })
+
+    it('returns 400 for invalid query for voting on comment', () => {
+        return request(app)
+            .put(`/api/comments/${data.comments[0]._id}cote=down`)
+            .expect(400)
+            .then(res => {
+                expect(res.text).to.be.an('string')
+                expect(res.text).to.equal('{"message":"Please provide a query in the format vote=up or vote=down"}')
+            })
+    })
+
+
+    it('returns 400 for not entering "up" or "down" for query for voting on article', () => {
+        return request(app)
+            .put(`/api/articles/${data.articles[0]._id}?vote=downuojkasokdoak`)
+            .expect(400)
+            .then(res => {
+                expect(res.text).to.be.an('string')
+                expect(res.text).to.equal('{"message":"vote can only be up or down"}')
+            })
+    })
+
+
+
     it('Updates an articles vote counts if query = up', () => {
         return request(app)
             .put(`/api/articles/${data.articles[0]._id}?vote=up`)
@@ -146,28 +195,49 @@ describe('tests for restful api', () => {
                 expect(res.body.votes).to.equal(1)
                 expect(res.body).to.be.an('object')
             })
-        })
-     
-        it('Updates an articles vote counts if query = down', () => {
-            return request(app)
-                .put(`/api/articles/${data.articles[0]._id}?vote=down`)
-                .then(res => {
-                    expect(res.body.votes).to.equal(0)
-                    expect(res.body).to.be.an('object')
-                })
+    })
+
+    it('Updates an articles vote counts if query = down', () => {
+        return request(app)
+            .put(`/api/articles/${data.articles[0]._id}?vote=down`)
+            .then(res => {
+                expect(res.body.votes).to.equal(0)
+                expect(res.body).to.be.an('object')
             })
-
-            it('tests Delete request a comment to an article', () => {
-                return request(app)
-                    .delete(`/api/articles/${data.comments[1]._id}`)
-                    .then(res => {
-                        console.log(res.body)
-                        expect(res.body).to.be.an('object')
-                    })
-                })    
+    })
 
 
-    it('tests Delete request a comment to an article', () => {
+    it('returns 400 for invalid query for voting on article', () => {
+        return request(app)
+            .put(`/api/articles/${data.articles[0]._id}?cote=down`)
+            .expect(400)
+            .then(res => {
+                expect(res.text).to.be.an('string')
+                expect(res.text).to.equal('{"message":"Please provide a query in the format vote=up or vote=down"}')
+            })
+    })
+
+    it('returns 400 for not entering "up" or "down" for query for voting on article', () => {
+        return request(app)
+            .put(`/api/articles/${data.articles[0]._id}?vote=downuojkasokdoak`)
+            .expect(400)
+            .then(res => {
+                expect(res.text).to.be.an('string')
+                expect(res.text).to.equal('{"message":"vote can only be up or down"}')
+            })
+    })
+
+
+    it(' Delete request a comment to an article', () => {
+        return request(app)
+            .delete(`/api/articles/${data.comments[1]._id}`)
+            .then(res => {
+                expect(res.body).to.be.an('object')
+            })
+    })
+
+
+    it(' Delete request a comment to an article', () => {
         let originalComments
         let Selectedcomment
         return request(app)
@@ -187,7 +257,7 @@ describe('tests for restful api', () => {
                 expect(res.body).to.be.an('array')
                 expect(originalComments - 1).to.equal(res.body.length)
             })
-        })
+    })
 
 
 });
