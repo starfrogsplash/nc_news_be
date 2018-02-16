@@ -90,7 +90,7 @@ const putVoteArticles = (req, res) => {
       // result.comments = Comments.find({ 'belongs_to': req.params.article_id}).lean();
       const article = result[0];
       article.comments = result[1].length;
-      res.send(article);
+      return res.send(article);
     })
     .catch(error => {
       return res.status(500).send('Something broke!', error);
