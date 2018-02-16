@@ -51,6 +51,25 @@ const getAllComments = (req, res) => {
     });
 };
 
+// const putVoteArticles = (req, res) => {
+
+//   let count = 0;
+//   if (req.query.vote === 'up') count++;
+//   if (req.query.vote === 'down') count--;
+//   if (!req.query.vote) return res.status(400).send({'message': 'Please provide a query in the format vote=up or vote=down'});
+//   if (req.query.vote !== 'up' && req.query.vote !== 'down') return res.status(400).send({'message':'vote can only be up or down'});
+
+//   return Articles.findByIdAndUpdate({ _id: req.params.article_id }, { $inc: { 'votes': count } }).lean()
+//     .then(results => {
+//       results.votes += count;
+//       return res.send(results);
+//     })
+//     .catch(error => {
+//       return res.status(500).send('Something broke!', error);
+//     });
+// };
+
+
 const putVoteArticles = (req, res) => {
 
   let count = 0;
@@ -62,12 +81,28 @@ const putVoteArticles = (req, res) => {
   return Articles.findByIdAndUpdate({ _id: req.params.article_id }, { $inc: { 'votes': count } }).lean()
     .then(results => {
       results.votes += count;
-      return res.send(results);
+      return results;
+    })
+    .then(result =>{
+      return Promise.all([result, Comments.find({ 'belongs_to': req.params.article_id}).lean() ]) ;
+    })
+    .then (result =>{
+      // result.comments = Comments.find({ 'belongs_to': req.params.article_id}).lean();
+      const article = result[0];
+      article.comments = result[1].length;
+      res.send(article);
     })
     .catch(error => {
       return res.status(500).send('Something broke!', error);
     });
 };
+
+
+
+
+
+
+
 
 
 module.exports = { getAllArticles, getSingleArticle, getAllComments, putVoteArticles };
