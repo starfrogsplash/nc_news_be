@@ -43,6 +43,7 @@ const deleteComment = (req, res) => {
 }; 
 
 const postComment = (req, res) => {
+  console.log(req);
   const comment = new Comments( {
     body: req.body.comment,
     belongs_to: req.params.article_id
