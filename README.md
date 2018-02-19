@@ -9,6 +9,17 @@ A RESTful API for Northcoders News website, built using Node, Express, MongoDB a
 ---------
 ### Installation
 
+Before running this project, you need to make sure you have these dependencies installed, the links are provided for you.
+
+[NODE](https://nodejs.org/en/download/package-manager/)
+
+[NPM](https://www.npmjs.com/get-npm)
+
+[Git](https://git-scm.com/)
+
+[mongodb](https://docs.mongodb.com/manual/installation/)
+
+
 To run this project you need to clone to your local machine and install its dependencies.
 
 In the terminal window use the command 'git clone' followed by the the project you want to install

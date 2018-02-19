@@ -9,5 +9,6 @@ router.use('/articles', articleRouter);
 router.use('/comments', commentRouter);
 router.use('/users', userRouter);
 
+router.use('/', (req, res) => res.status(200).send({status: 'working'}));
 
 module.exports = router;

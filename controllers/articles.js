@@ -1,7 +1,6 @@
 const Articles = require('../models/articles');
 const Comments = require('../models/comments');
 
-
 const getAllArticles = (req, res) => {
   let articles;
   return Articles.find().lean()
@@ -24,7 +23,6 @@ const getAllArticles = (req, res) => {
     });
 };
 
-
 const getSingleArticle = (req, res) => {
   return Articles.findOne({ _id: req.params.article_id }).lean()
     .then(article => {
@@ -40,7 +38,6 @@ const getSingleArticle = (req, res) => {
     });
 };
 
-
 const getAllComments = (req, res) => {
   return Comments.find({ 'belongs_to': req.params.article_id }).lean()
     .then(comments => {
@@ -50,7 +47,6 @@ const getAllComments = (req, res) => {
       if (error.name === 'CastError') return res.status(400).send('Invalid ID');
     });
 };
-
 
 const putVoteArticles = (req, res) => {
 
@@ -77,13 +73,5 @@ const putVoteArticles = (req, res) => {
       return res.status(500).send('Something broke!', error);
     });
 };
-
-
-
-
-
-
-
-
 
 module.exports = { getAllArticles, getSingleArticle, getAllComments, putVoteArticles };

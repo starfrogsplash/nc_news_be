@@ -2,7 +2,6 @@ const router = require ('express').Router();
 const {getAllArticles, getSingleArticle, getAllComments, putVoteArticles} = require ('../controllers/articles');
 const {postComment} = require ('../controllers/comments');
 
-
 router.route('/')
   .get(getAllArticles);
 

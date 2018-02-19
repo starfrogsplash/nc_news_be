@@ -2,8 +2,6 @@ const Topic = require('../models/topics');
 const Articles = require('../models/articles');
 const Comments = require('../models/comments');
 
-
-
 const getAllTopics = (req, res) => {
   return Topic.find().lean()
     .then(topics => res.send({topics}))
@@ -11,9 +9,6 @@ const getAllTopics = (req, res) => {
       res.status(500).send('Something broke!', error);
     });
 };
-
-
-
 
 const getAllArticles = (req, res) => {
   let articles;
