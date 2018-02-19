@@ -12,13 +12,6 @@ const getAllTopics = (req, res) => {
     });
 };
 
-// const getAllArticles = (req, res) => {
-//   return Articles.find({'belongs_to': req.params.topic_id}).lean()
-//     .then(articles => res.send({articles}))
-//     .catch(error => {
-//       res.status(500).send('Something broke!', error);
-//     });
-// };
 
 
 

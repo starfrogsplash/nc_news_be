@@ -5,7 +5,7 @@
   "main": "config.js",
   "scripts": {
     "test": "NODE_ENV=test mocha spec",
-    "start": "nodemon index.js"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
