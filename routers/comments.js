@@ -1,14 +1,14 @@
-const router = require ('express').Router()
-const {putVoteComment, getAllComments, deleteComment, getSingleComment} = require ('../controllers/comments')
+const router = require ('express').Router();
+const {putVoteComment, getAllComments, deleteComment, getSingleComment} = require ('../controllers/comments');
 
 
 router.route('/')
-    .get(getAllComments)
+  .get(getAllComments);
 
 
 router.route('/:comment_id')
-    .put(putVoteComment)
-    .delete(deleteComment)
-    .get(getSingleComment)
+  .put(putVoteComment)
+  .delete(deleteComment)
+  .get(getSingleComment);
 
-module.exports = router
+module.exports = router;

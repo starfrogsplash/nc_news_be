@@ -1,13 +1,13 @@
-const router = require ('express').Router()
-const topicRouter = require ('./topics')
-const articleRouter = require ('./articles')
- const commentRouter = require ('./comments')
- const userRouter = require ('./users')
+const router = require ('express').Router();
+const topicRouter = require ('./topics');
+const articleRouter = require ('./articles');
+const commentRouter = require ('./comments');
+const userRouter = require ('./users');
 
-router.use('/topics', topicRouter)
-router.use('/articles', articleRouter)
-router.use('/comments', commentRouter)
-router.use('/users', userRouter)
+router.use('/topics', topicRouter);
+router.use('/articles', articleRouter);
+router.use('/comments', commentRouter);
+router.use('/users', userRouter);
 
 
-module.exports = router
+module.exports = router;

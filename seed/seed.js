@@ -11,7 +11,7 @@ var logger = log4js.getLogger();
 var moment = require('moment');
 var DBs = require('../config').DB;
 
-mongoose.connect('mongodb://starfrogsplash:Link0011@ds229388.mlab.com:29388/nc_news_db_test', function (err) {
+mongoose.connect(DBs, function (err) {
   if (!err) {
     logger.info(`connected to database ${DBs.dev}`);
     mongoose.connection.db.dropDatabase();
