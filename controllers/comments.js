@@ -21,7 +21,6 @@ const getSingleComment = (req, res) => {
     });
 };
 
-
 const getAllComments = (req, res) => {
   return Comments.find().lean()
     .then(comments => res.send(comments))
@@ -29,8 +28,6 @@ const getAllComments = (req, res) => {
       res.status(500).send('Something broke!');
     });
 };
-
-
 
 const deleteComment = (req, res) => {
   return Comments.findOneAndRemove({_id: req.params.comment_id })
@@ -56,7 +53,6 @@ const postComment = (req, res) => {
     });
 };
 
-
 const putVoteComment = (req, res) => {
 
   let count = 0;
@@ -75,6 +71,5 @@ const putVoteComment = (req, res) => {
     });
 
 };
-
 
 module.exports = { postComment, putVoteComment, getAllComments, deleteComment, getSingleComment, getAllArticles };

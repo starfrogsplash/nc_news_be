@@ -186,7 +186,7 @@ describe('tests for restful api', () => {
         .send('This is a string!!')
         .expect(400)
         .then(res => {
-          expect(res.text).to.equal('{"message":"Please provide message in the form of an object"}');
+          expect(res.body.message).to.equal('Please provide message in the form of an object');
         });
     });
 
