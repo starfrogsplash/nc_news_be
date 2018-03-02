@@ -3,7 +3,8 @@
 
 ### About
 
-A RESTful API for Northcoders News website, built using Node, Express, MongoDB and Mongoose.
+A RESTful API for Northcoders News website, built using Node, Express, MongoDB and Mongoose. which is also
+deployed on Heroku https://github.com/starfrogsplash/nc_news_be
 
 
 ---------
